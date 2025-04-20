@@ -67,5 +67,128 @@ fun main() {
     println(employeeInfo)
 
 
-    
+    // if - else 문
+    val payment = 120
+
+    if (payment > 9800) {
+        println("최저시급 이상입니다")
+    } else {
+        println("북조선로동자 입니다")
+    }
+
+// 변수에 조건에 따라 값 다르게 저장하기
+    val paymentStatus = if (payment > 9800) "서울인" else "북조선로동자"
+    println(paymentStatus)
+
+    //변수에 if - else - else if 저장하기
+    val hours: Long = 45
+    val overtimeStatus = if (hours <= 40) {
+        "정상 근무"
+    } else if (hours <= 52) {
+        "노예 근무"
+    } else {
+        "법정 한도 초과"
+    }
+    println("근무 상태: $overtimeStatus")
+
+
+    val paymentCycle = "WEEKLY"
+
+    // 기본 when 표현식 (switch - case 문 비슷한 문법)
+    when (paymentCycle) {
+        "WEEKLY" -> println("주급으로 지급합니다.")
+        "MONTHLY" -> println("월급으로 지급합니다.")
+        else -> println("지급 주기가 설정되지 않았습니다.")
+    }
+
+
+    // 범위 검사
+    val employeeAge = 22
+    val ageGroup = when (employeeAge) {
+        in 1..17 -> "미성년자 (고용 불가)"
+        in 18..30 -> "청년층"
+        in 31..55 -> "중년층"
+        else -> "장년층"
+    }
+    println("나이 그룹: $ageGroup")
+
+
+//for 반복문
+    for (i in 1..5) {
+        println("숫자 : $i") // 1- 5 까지 출력
+    }
+
+
+    // 역순 반복
+    for (i in 5 downTo 1) {
+        println("역순 카운트: $i")
+    }
+
+
+    // 컬렉션 반복
+    val employees = listOf("김민수", "이영희", "박철수", "정미나")
+    for (employee in employees) {
+        //하나씩 꺼낸다 in 리스트 (복수) 에서
+        println("알바생: $employee")
+    } // 리스트 안의 문자열들이 하나씩 출력된다
+
+// 맵 반복
+    val hourlyWages = mapOf(
+        "김민수" to 10000,
+        "이영희" to 9800,
+        "박철수" to 10200
+    )  //hourlyWages 안의 객체의 위치에 맞게
+    // 김민수 -> salary , 10000 -> wage 가 되어 map 안의 객체들이 반복 출력된다
+    for ((salary, wage) in hourlyWages) {
+        println("$salary 의 시급: $wage 원")
+    }
+
+//NullPointerException 을 방지하는 null 안정성 함수
+// employeeName 변수는 String? 타입으로 null 을 저장할 수 있다
+// ? 기호가 붙은 타입은 해당 변수가 null 값을 가질 수 있다는 의미
+    var employeeName: String? = "주윤발"
+    // 주윤발 -> null 로 값 변경
+    employeeName = null
+
+    // 알바생 객체를 만들 클래스
+    data class Employee(
+        val name: String,
+        val email: String,
+        val age: Int,
+        val hourlyWage: Int,
+        val insuranceStatus: Boolean,
+        val paymentCycle: String,
+        val workingHours: Double? = null // null 값을 가질 수 있다
+    )
+
+    // 인스턴스를 리스트 화 시켜서 employeesList 에 저장하기
+    val employeesList = listOf(
+        Employee("윤바리", "joohd@@", 20, 10000, false, "WEEKLY", 40.0),
+        Employee("돼지", "marapig", 21, 12000, true, "MONTHLY", 38.0)
+    )
+    println("\n[ 전체 알바생]")
+
+// employeesList 에서 알바생들의 정보를 출력하기
+    for ((index, employee) in employeesList.withIndex()) {
+        println("${index + 1}. ${employee.name} (${employee.email}), ${employee.age}세")
+    }
+
+    println("\n[급여 정보]")
+    for (emp in employeesList) {
+        val sal = if (emp.workingHours != null) {
+            val baseSal = emp.workingHours * emp.hourlyWage
+            val tax = if (emp.insuranceStatus) 0.9 else 0.97 // 4대보험 유뮤에 따른 환율
+            (baseSal * tax).toLong()
+        } else {
+            0
+        }
+        val payment = when (emp.paymentCycle) {
+            "WEEKLY" -> "주급"
+            "MONTHLY" -> "월급"
+            else -> "미정"
+        }
+
+        val isJoin = if (emp.insuranceStatus) "가입" else "마가입"
+ println("${emp.name}: $payment ${sal}원 4대보험 유무 : $isJoin")
+    }
 }
